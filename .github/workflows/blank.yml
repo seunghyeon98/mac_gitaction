@@ -1,0 +1,31 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main  # 또는 다른 브랜치 이름
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout 소스 코드
+      uses: actions/checkout@v2
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@1
+      with:
+        username: havi98
+        password: dckr_pat_I8UuQ3_eGvsslYUknJh2MGqAm0c
+
+    - name: build and release to dockerhub
+      env:
+        NAME: havi98
+        REPO: mac_gitaction
+      run: |
+        docker build -t $REPO .
+        docker tag $REPO:latest $NAME/$REPO:latest
+        docker push $NAME/$REPO:latest
+    
+      
