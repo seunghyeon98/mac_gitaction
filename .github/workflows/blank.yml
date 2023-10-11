@@ -13,11 +13,16 @@ jobs:
     - name: Checkout 소스 코드
       uses: actions/checkout@v2
 
+    # - name: Login to Docker Hub
+    #   uses: docker/login-action@1
+    #   with:
+    #     username: havi98
+    #     password: dckr_pat_I8UuQ3_eGvsslYUknJh2MGqAm0c
+
     - name: Login to Docker Hub
-      uses: docker/login-action@1
-      with:
-        username: havi98
-        password: dckr_pat_I8UuQ3_eGvsslYUknJh2MGqAm0c
+      run: docker login -u havi98 -p dckr_pat_I8UuQ3_eGvsslYUknJh2MGqAm0c
+      env: 
+        DOCKER_PASSWORD: dckr_pat_I8UuQ3_eGvsslYUknJh2MGqAm0c
 
     - name: build and release to dockerhub
       env:
