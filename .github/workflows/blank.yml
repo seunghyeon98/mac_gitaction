@@ -13,24 +13,22 @@ jobs:
     - name: Checkout 소스 코드
       uses: actions/checkout@v2
 
-    # - name: Login to Docker Hub
-    #   uses: docker/login-action@1
-    #   with:
-    #     username: havi98
-    #     password: dckr_pat_I8UuQ3_eGvsslYUknJh2MGqAm0c
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
 
     - name: Login to Docker Hub
-      run: docker login -u havi98 -p dckr_pat_I8UuQ3_eGvsslYUknJh2MGqAm0c
-      env: 
-        DOCKER_PASSWORD: dckr_pat_I8UuQ3_eGvsslYUknJh2MGqAm0c
+      run: echo ${{ secrets.MAC_GITACTION }} | docker login -u havi98 --password-stdin
+      env:
+        DOCKER_PASSWORD: ${{ secrets.MAC_GITACTION }}
 
-    - name: build and release to dockerhub
+    - name: Build and Push Docker Image
       env:
         NAME: havi98
         REPO: mac_gitaction
       run: |
-        docker build -t $REPO .
-        docker tag $REPO:latest $NAME/$REPO:latest
+        docker buildx create --use
+        docker buildx build --platform linux/amd64,linux/arm64 -t $NAME/$REPO:latest .
         docker push $NAME/$REPO:latest
-    
-      
